@@ -1,0 +1,77 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+def libraryVersion = "1.0"
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode 1
+        versionName libraryVersion
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
+    }
+
+    lintOptions {
+        disable 'InvalidPackage' // Some libraries have issues with this
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.aar')) {
+
+                if (buildType.name == buildTypes.release.name) {
+                    def fileName = "${archivesBaseName}-${libraryVersion}.aar"
+                    output.outputFile = new File(outputFile.parent, fileName)
+                    println("output file path ${output.outputFile}")
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: '../../libs')
+
+    // Dependency Injection
+    compile utilDependencies.dagger
+    annotationProcessor utilDependencies.daggerCompiler
+    provided utilDependencies.javaxAnnotation
+
+    compile supportDepedencies.androidAnnotations
+
+    // Retrofit 2
+    compile(utilDependencies.retrofit) { exclude module: 'okhttp' }
+    compile utilDependencies.retrofitRxjava
+    compile utilDependencies.retrofitJsonConverter
+    compile utilDependencies.okHttp
+    compile utilDependencies.okHttpInterceptor
+
+    // Reactive Java for Android
+    provided utilDependencies.rxJava
+    provided utilDependencies.rxAndroid
+
+    // Timber log
+    provided utilDependencies.timber
+
+    // Test compile
+    testCompile testDependencies.junit
+}

@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="default_item_margin_5">5dp</dimen>
+    <dimen name="default_item_margin_6">6dp</dimen>
+    <dimen name="default_item_margin_8">8dp</dimen>
+    <dimen name="default_item_margin_10">10dp</dimen>
+    <dimen name="default_item_margin_16">16dp</dimen>
+    <dimen name="default_item_margin_20">20dp</dimen>
+</resources>

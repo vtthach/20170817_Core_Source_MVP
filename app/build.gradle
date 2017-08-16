@@ -1,30 +1,141 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+def VERSION_CODE = 1
+def VERSION_NAME = "1.0"
+def DIMENSION_DEFAULT = "default"
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
+
     defaultConfig {
         applicationId "cbsa.switchon.origination"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+        multiDexEnabled true
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dependencies {
+        repositories {
+            jcenter()
+        }
+
+        repositories {
+            flatDir { dirs '../libs' }
+        }
+    }
+
+    flavorDimensions DIMENSION_DEFAULT
+
+    productFlavors {
+        dev {
+            dimension DIMENSION_DEFAULT
+        }
+        prod {
+            dimension DIMENSION_DEFAULT
+        }
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError true
+        disable 'InvalidPackage' // Some libraries have issues with this
+        disable 'OldTargetApi' //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities' //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder' //For testing purpose. This is safe to remove.
+    }
+
+    compileOptions {
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
+    }
+
+    applicationVariants.all { variant ->
+//        variant.outputs.all { output -> > gradle 3.0
+        variant.outputs.each { output ->
+
+            def project = "cbsa-switch-on"
+            def SEP = "-"
+            def flavor = variant.productFlavors[0].name
+            def date = new Date();
+            def formattedDate
+            formattedDate = date.format("yyMMddkkmm")
+            def version = variant.versionName
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+//            outputFileName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk" // > Gradle 3.0
+            output.outputFile = new File(output.outputFile.parent, newApkName)
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+
+    // Support library
+    compile supportDepedencies.appcompatV7
+    compile supportDepedencies.supportDesignLibrary
+    compile supportDepedencies.constraintLayout
+
+    // Timber log
+    compile utilDependencies.timber
+
+    // Guava
+    compile utilDependencies.guava
+
+    // Material dialog
+    compile utilDependencies.materialDialog
+
+    // Dependency Injection
+    compile utilDependencies.dagger
+    annotationProcessor utilDependencies.daggerCompiler
+    provided utilDependencies.javaxAnnotation
+
+    // Butter Knife
+    compile utilDependencies.butterKnife
+    annotationProcessor utilDependencies.butterKnifeCompiler
+
+    // Reactive Java for Android
+    compile utilDependencies.rxJava
+    compile utilDependencies.rxAndroid
+
+    // Retrofit 2
+    compile(utilDependencies.retrofit) { exclude module: 'okhttp' }
+    compile utilDependencies.retrofitRxjava
+    compile utilDependencies.retrofitJsonConverter
+    compile utilDependencies.okHttp
+    compile utilDependencies.okHttpInterceptor
+
+    // Gson
+    compile googleDepedencies.gson
+
+    // Test
+    testCompile testDependencies.junit
+    testCompile testDependencies.mockito
+
+    // Retrofit wrapper
+    compile(name: 'retrofit_wrapper-1.0', ext: 'aar') { transitive = true }
+
+    // Toast
+    compile(group: 'cbsa', name: 'ui.widget.notification', version: '2.0.10-20170331.080701-3', ext: 'aar') {
+        transitive = true
+    }
 }

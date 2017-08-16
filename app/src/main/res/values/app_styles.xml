@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ViewMainStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:splitMotionEvents">false</item>
+    </style>
+
+    <style name="ActionBarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/primary_light</item>
+    </style>
+
+    <style name="TextStyleLabel" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="AppTextStyleBody2" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextStyleCaption" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="AppTextStyleMedium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/c_text_medium</item>
+    </style>
+
+    <style name="AppTextStyleMedium.Medium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/primary_text_dark</item>
+    </style>
+
+    <style name="AppTextStyleLarge" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/primary_text_dark</item>
+    </style>
+
+    <style name="AppTextStyleSmall.Medium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="AppTextStyleSmall" parent="TextAppearance.AppCompat.Small">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/c_text_small</item>
+    </style>
+</resources>
