@@ -1,2 +1,2 @@
 include ':app'
-//include ':modules:retrofit_wrapper'
+include ':modules:retrofit_wrapper'

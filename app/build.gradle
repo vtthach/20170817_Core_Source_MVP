@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 
 def VERSION_CODE = 1
 def VERSION_NAME = "1.0"
@@ -11,7 +10,7 @@ android {
     buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
-        applicationId "cbsa.switchon.origination"
+        applicationId "com.igap"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
         versionCode VERSION_CODE
@@ -21,17 +20,17 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("../keystore.jks")
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEYSTORE_ALIAS
-            keyPassword KEY_PASSWORD
+//            storeFile file("../keystore.jks")
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias KEYSTORE_ALIAS
+//            keyPassword KEY_PASSWORD
         }
 
         debug {
-            storeFile file("../keystore.jks")
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEYSTORE_ALIAS
-            keyPassword KEY_PASSWORD
+//            storeFile file("../keystore.jks")
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias KEYSTORE_ALIAS
+//            keyPassword KEY_PASSWORD
         }
     }
 
@@ -90,10 +89,8 @@ android {
     }
 
     applicationVariants.all { variant ->
-//        variant.outputs.all { output -> > gradle 3.0
-        variant.outputs.each { output ->
-
-            def project = "cbsa-switch-on"
+        variant.outputs.all { output ->
+            def project = "igap"
             def SEP = "-"
             def flavor = variant.productFlavors[0].name
             def date = new Date();
@@ -105,9 +102,7 @@ android {
             }
             def version = variant.versionName
             def buildType = variant.variantData.variantConfiguration.buildType.name
-            def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
-//            outputFileName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk" // > Gradle 3.0
-            output.outputFile = new File(output.outputFile.parent, newApkName)
+            outputFileName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk" // > Gradle 3.0
         }
     }
 }
@@ -128,59 +123,58 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     // appcompatV7
-    compile supportDepedencies.appcompatV7
+    implementation supportDepedencies.appcompatV7
+    // appcompatV13
+    implementation supportDepedencies.supportV13
     // supportDesignLibrary
-    compile supportDepedencies.supportDesignLibrary
+    implementation supportDepedencies.supportDesignLibrary
     // constraintLayout
-    compile supportDepedencies.constraintLayout
+    implementation supportDepedencies.constraintLayout
     // Timber log
-    compile utilDependencies.timber
+    implementation utilDependencies.timber
     // Guava
-    compile utilDependencies.guava
+    implementation utilDependencies.guava
     // Material dialog
-    compile utilDependencies.materialDialog
+    implementation utilDependencies.materialDialog
     // dagger
-    compile utilDependencies.dagger
+    implementation utilDependencies.dagger
     // daggerCompiler
     annotationProcessor utilDependencies.daggerCompiler
     // javaxAnnotation
-    provided utilDependencies.javaxAnnotation
+    compileOnly utilDependencies.javaxAnnotation
     // Butter Knife
-    compile utilDependencies.butterKnife
+    implementation utilDependencies.butterKnife
     // butterKnifeCompiler
     annotationProcessor utilDependencies.butterKnifeCompiler
-    // rxJava
-    compile utilDependencies.rxJava
-    // rxAndroid
-    compile utilDependencies.rxAndroid
+    // rxJava component
+    implementation utilDependencies.rxJava
     // Retrofit 2
-    compile(utilDependencies.retrofit) { exclude module: 'okhttp' }
+    implementation(utilDependencies.retrofit) { exclude module: 'okhttp' }
     // retrofitRxjava
-    compile utilDependencies.retrofitRxjava
+    implementation utilDependencies.retrofitRxjava
     // retrofitJsonConverter
-    compile utilDependencies.retrofitJsonConverter
+    implementation utilDependencies.retrofitJsonConverter
     // okHttp
-    compile utilDependencies.okHttp
+    implementation utilDependencies.okHttp
     // okHttpInterceptor
-    compile utilDependencies.okHttpInterceptor
+    implementation utilDependencies.okHttpInterceptor
     // Gson
-    compile googleDepedencies.gson
+    implementation googleDepedencies.gson
     // junit
-    testCompile testDependencies.junit
+    testImplementation testDependencies.junit
     // mockito
-    testCompile testDependencies.mockito
-    // Retrofit wrapper
-    compile(name: 'retrofit_wrapper-1.0', ext: 'aar')
-    // Toast
-    compile('cbsa:ui.widget.notification:2.0.10-20170331.080701-3@aar') {
+    testImplementation testDependencies.mockito
+    // Fabric
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
-    // Fabric
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
     // proguard-snippets
-    compile 'com.infstory:proguard-snippets:1.0.0'
+    implementation 'com.infstory:proguard-snippets:1.0.0'
+
+    // Retrofit wrapper
+    //    implementation(name: 'retrofit_wrapper-1.0', ext: 'aar')
+    implementation project(':modules:retrofit_wrapper')
 }

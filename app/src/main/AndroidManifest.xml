@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cbsa.switchon.origination">
+    package="com.igap">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -19,8 +22,6 @@
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="bc36156410e05b7c7fcb22dd93f9b812d1b05154" />
+            android:value="95eb28ee0a4f5a61906a38e1708c30de01061279" />
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

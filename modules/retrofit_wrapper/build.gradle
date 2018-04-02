@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 
 def libraryVersion = "1.0"
 
@@ -33,13 +32,12 @@ android {
     }
 
     libraryVariants.all { variant ->
-        variant.outputs.each { output ->
+        variant.outputs.all { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.aar')) {
 
                 if (buildType.name == buildTypes.release.name) {
-                    def fileName = "${archivesBaseName}-${libraryVersion}.aar"
-                    output.outputFile = new File(outputFile.parent, fileName)
+                    outputFileName = "${archivesBaseName}-${libraryVersion}.aar"
                     println("output file path ${output.outputFile}")
                 }
             }
@@ -48,30 +46,29 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(include: ['*.jar'], dir: '../../libs')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: '../../libs')
 
     // Dependency Injection
-    compile utilDependencies.dagger
+    implementation utilDependencies.dagger
     annotationProcessor utilDependencies.daggerCompiler
     provided utilDependencies.javaxAnnotation
 
-    compile supportDepedencies.androidAnnotations
+    implementation supportDepedencies.androidAnnotations
 
     // Retrofit 2
-    compile(utilDependencies.retrofit) { exclude module: 'okhttp' }
-    compile utilDependencies.retrofitRxjava
-    compile utilDependencies.retrofitJsonConverter
-    compile utilDependencies.okHttp
-    compile utilDependencies.okHttpInterceptor
+    implementation(utilDependencies.retrofit) { exclude module: 'okhttp' }
+    implementation utilDependencies.retrofitRxjava
+    implementation utilDependencies.retrofitJsonConverter
+    implementation utilDependencies.okHttp
+    implementation utilDependencies.okHttpInterceptor
 
     // Reactive Java for Android
     provided utilDependencies.rxJava
-    provided utilDependencies.rxAndroid
 
     // Timber log
     provided utilDependencies.timber
 
-    // Test compile
-    testCompile testDependencies.junit
+    // Test implementation
+    testImplementation testDependencies.junit
 }
